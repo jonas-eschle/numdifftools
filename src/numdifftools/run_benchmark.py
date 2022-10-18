@@ -37,7 +37,7 @@ def _plot(plot, problem_sizes, objects, symbols, ylabel='', loc=2, logx=False):
 
     for title, funcs, results in objects:
         plt.figure()
-        plt.title(title + ' ' + now)
+        plt.title(f'{title} {now}')
         for i, method in enumerate(funcs):
             plot(problem_sizes, results[i], symbols[i],
                  markerfacecolor='None', label=method)
@@ -131,8 +131,11 @@ def run_gradient_and_hessian_benchmarks(gradient_funs, hessian_funs,
     print(results_gradients.shape)
 
     for i, txt in enumerate(['run times', 'errors']):
-        objects = [('Jacobian ' + txt, gradient_funs, results_gradients[..., i].T),
-                   ('Hessian ' + txt, hessian_funs, results_hessians[..., i].T)]
+        objects = [
+            (f'Jacobian {txt}', gradient_funs, results_gradients[..., i].T),
+            (f'Hessian {txt}', hessian_funs, results_hessians[..., i].T),
+        ]
+
         if i == 0:
             plot_runtimes(objects, problem_sizes, symbols)
         else:
@@ -153,7 +156,7 @@ def main(problem_sizes=(4, 8, 16, 32, 64, 96)):
 
     if nda is not None:
         nda_method = 'forward'
-        nda_txt = 'algopy_' + nda_method
+        nda_txt = f'algopy_{nda_method}'
         gradient_funs[nda_txt] = nda.Jacobian(1, method=nda_method)
 
         hessian_funs[nda_txt] = getattr(nda, hessian_fun)(1, method=nda_method)

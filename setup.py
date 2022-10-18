@@ -60,18 +60,16 @@ PACKAGE_NAME = 'numdifftools'
 def read(file_path, lines=False):
     """Returns contents of file either as a string or list of lines."""
     with open(file_path, 'r') as fp:
-        if lines:
-            return fp.readlines()
-        return fp.read()
+        return fp.readlines() if lines else fp.read()
 
 
 def find_version(file_path):
     """Returns version given in the __version__ variable of a module file"""
     version_file = read(file_path)
-    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]",
-                              version_file, re.M)  # @UndefinedVariable
-    if version_match:
-        return version_match.group(1)
+    if version_match := re.search(
+        r"^__version__ = ['\"]([^'\"]*)['\"]", version_file, re.M
+    ):
+        return version_match[1]
     raise RuntimeError("Unable to find version string.")
 
 
@@ -97,7 +95,7 @@ class Doctest(Command):
 
 def setup_package():
     version = find_version(os.path.join(ROOT, 'src', PACKAGE_NAME, "__init__.py"))
-    print("Version: {}".format(version))
+    print(f"Version: {version}")
 
     sphinx_requires = ['sphinx>=1.3.1']
     needs_sphinx = {'build_sphinx'}.intersection(sys.argv)

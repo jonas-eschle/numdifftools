@@ -210,10 +210,11 @@ def _poor_convergence(z, r, f, bn, mvec):
 
 
 def _get_logn(n):
-    if n == 1:
-        return 0
-
-    return np.int_(np.log2(n - 1) - 1.5849625007211561).clip(min=0)
+    return (
+        0
+        if n == 1
+        else np.int_(np.log2(n - 1) - 1.5849625007211561).clip(min=0)
+    )
 
 
 def _num_taylor_coefficients(n):
@@ -239,8 +240,7 @@ def _num_taylor_coefficients(n):
     _assert(n < 193, 'Number of derivatives too large.  Must be less than 193')
     correction = np.array([0, 0, 1, 3, 4, 7])[_get_logn(n)]
     log2n = _get_logn(n - correction)
-    m = 2 ** (log2n + 3)
-    return m
+    return 2 ** (log2n + 3)
 
 
 def richardson_parameter(vals, k):
@@ -263,15 +263,15 @@ def _extrapolate(bs, rs, m):
     # out higher order error terms.
 
     nk = len(rs)
-    extrap0 = []
-    extrap = []
-    for k in range(1, nk):
-        extrap0.append(richardson(bs, k=k, c=1.0 - (rs[k - 1] / rs[k]) ** m))
+    extrap0 = [
+        richardson(bs, k=k, c=1.0 - (rs[k - 1] / rs[k]) ** m)
+        for k in range(1, nk)
+    ]
 
-    for k in range(1, nk - 1):
-        extrap.append(richardson(extrap0, k=k,
-                                 c=1.0 - (rs[k - 1] / rs[k + 1]) ** m))
-    return extrap
+    return [
+        richardson(extrap0, k=k, c=1.0 - (rs[k - 1] / rs[k + 1]) ** m)
+        for k in range(1, nk - 1)
+    ]
 
 
 def _get_best_taylor_coefficients(bs, rs, m, max_m1m2):

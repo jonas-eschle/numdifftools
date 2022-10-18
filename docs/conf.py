@@ -19,7 +19,12 @@ from datetime import datetime
 CURRENT_YEAR = datetime.now().year
 START_YEAR = 2009
 
-DEV_YEARS = '{}'.format(START_YEAR) if START_YEAR == CURRENT_YEAR else '{}-{}'.format(START_YEAR, CURRENT_YEAR)
+DEV_YEARS = (
+    f'{START_YEAR}'
+    if START_YEAR == CURRENT_YEAR
+    else f'{START_YEAR}-{CURRENT_YEAR}'
+)
+
 # General information about the project.
 
 
@@ -203,7 +208,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = PACKAGE_NAME + 'doc'
+htmlhelp_basename = f'{PACKAGE_NAME}doc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -230,9 +235,15 @@ latex_engine = 'pdflatex'
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc,  '{}-{}.tex'.format(PACKAGE_NAME, release), project + ' Documentation',
-     author, 'manual'),
+    (
+        master_doc,
+        f'{PACKAGE_NAME}-{release}.tex',
+        f'{project} Documentation',
+        author,
+        'manual',
+    )
 ]
+
 
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
@@ -278,9 +289,9 @@ latex_use_parts = True
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, PACKAGE_NAME, project + ' Documentation',
-     [author], 1)
+    (master_doc, PACKAGE_NAME, f'{project} Documentation', [author], 1)
 ]
+
 
 
 # -- Options for Texinfo output -------------------------------------------
@@ -289,10 +300,17 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, PACKAGE_NAME, project + ' Documentation',
-     author, PACKAGE_NAME, 'One line description of project.',
-     'Miscellaneous'),
+    (
+        master_doc,
+        PACKAGE_NAME,
+        f'{project} Documentation',
+        author,
+        PACKAGE_NAME,
+        'One line description of project.',
+        'Miscellaneous',
+    )
 ]
+
 
 
 # -- Options for Epub output ----------------------------------------------
@@ -316,16 +334,17 @@ epub_copyright = copyright
 epub_exclude_files = ['search.html']
 
 # -- External mapping ------------------------------------------------------------
-python_version = '.'.join(map(str, sys.version_info[0:2]))
+python_version = '.'.join(map(str, sys.version_info[:2]))
 intersphinx_mapping = {
     'sphinx': ('http://www.sphinx-doc.org/en/stable', None),
-    'python': ('https://docs.python.org/' + python_version, None),
+    'python': (f'https://docs.python.org/{python_version}', None),
     'matplotlib': ('https://matplotlib.org', None),
     'numpy': ('https://docs.scipy.org/doc/numpy', None),
     'sklearn': ('http://scikit-learn.org/stable', None),
     'pandas': ('http://pandas.pydata.org/pandas-docs/stable', None),
     'scipy': ('https://docs.scipy.org/doc/scipy/reference', None),
 }
+
 
 # -- Doctest configuration ----------------------------------------
 

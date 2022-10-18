@@ -67,7 +67,7 @@ class CStepGenerator(MinStepGenerator):
         self._check_path()
 
     def _check_path(self):
-        _assert(self.path in ['spiral', 'radial'], 'Invalid Path: {}'.format(str(self.path)))
+        _assert(self.path in ['spiral', 'radial'], f'Invalid Path: {str(self.path)}')
 
     @property
     def step_ratio(self):
@@ -75,7 +75,7 @@ class CStepGenerator(MinStepGenerator):
         dtheta = self.dtheta
         _step_ratio = float(self._step_ratio)  # radial path
         if dtheta != 0:
-            _step_ratio = np.exp(1j * dtheta) * _step_ratio  # a spiral path
+            _step_ratio *= np.exp(1j * dtheta)
         return _step_ratio
 
     @step_ratio.setter
@@ -176,8 +176,7 @@ class _Limit(object):
         outliers = (((abs(der) < (a_median / trim_fact)) +
                     (abs(der) > (a_median * trim_fact))) * (a_median > 1e-8) +
                     ((der < p25 - 1.5 * iqr) + (p75 + 1.5 * iqr < der)))
-        errors = outliers * np.abs(der - median)
-        return errors
+        return outliers * np.abs(der - median)
 
     @staticmethod
     def _get_best_estimate(der, errors, steps, shape):
@@ -189,7 +188,7 @@ class _Limit(object):
 
     @staticmethod
     def _wynn_extrapolate(der, steps):
-        der, errors = dea3(der[0:-2], der[1:-1], der[2:], symmetric=False)
+        der, errors = dea3(der[:-2], der[1:-1], der[2:], symmetric=False)
         return der, errors, steps[2:]
 
     def _extrapolate(self, results, steps, shape):
@@ -377,9 +376,7 @@ class Limit(_Limit):
         z = np.asarray(x)
         f = partial(self._fun, args=args, kwds=kwds)
         f_z, info = self._lim(f, z)
-        if self.full_output:
-            return f_z, info
-        return f_z
+        return (f_z, info) if self.full_output else f_z
 
     def _call_lim(self, f_z, z, f):
         err = np.zeros_like(f_z, dtype=float)
@@ -405,9 +402,7 @@ class Limit(_Limit):
             f_z = f(z, 0)
             f_z, info = self._call_lim(f_z, z, f)
 
-        if self.full_output:
-            return f_z, info
-        return f_z
+        return (f_z, info) if self.full_output else f_z
 
 
 class Residue(Limit):

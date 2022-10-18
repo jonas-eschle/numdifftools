@@ -447,9 +447,7 @@ class LogRule(object):
     def _parity(self, method, order, method_order):
         if method.startswith('central'):
             return (order % 2) + 1
-        if method == 'complex':
-            return self._parity_complex(order, method_order)
-        return 0
+        return self._parity_complex(order, method_order) if method == 'complex' else 0
 
     @staticmethod
     def _fd_matrix(step_ratio, parity, nterms):
@@ -502,12 +500,16 @@ class LogRule(object):
         return self._multicomplex_middle_name
 
     def _get_last_name(self):
-        last = ''
-        if (self.method == 'complex' and self._derivative_mod_four_is_zero or
-                self._complex_high_order and
-                self._derivative_mod_four_is_three):
-            last = '_higher'
-        return last
+        return (
+            '_higher'
+            if (
+                self.method == 'complex'
+                and self._derivative_mod_four_is_zero
+                or self._complex_high_order
+                and self._derivative_mod_four_is_three
+            )
+            else ''
+        )
 
     @property
     def diff(self):
@@ -554,9 +556,7 @@ class LogRule(object):
             FD_RULES[(step_ratio, parity, num_terms)] = fd_rules
 
         rule_index = order // step
-        if self._flip_fd_rule:
-            return -fd_rules[rule_index]
-        return fd_rules[rule_index]
+        return -fd_rules[rule_index] if self._flip_fd_rule else fd_rules[rule_index]
 
     @staticmethod
     def _vstack(sequence, steps):

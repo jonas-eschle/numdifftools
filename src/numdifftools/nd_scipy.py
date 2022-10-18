@@ -79,9 +79,7 @@ class Jacobian(_Common):
         options = dict(method=method, rel_step=self.step, args=args,
                        kwargs=kwds, bounds=self.bounds, sparsity=self.sparsity)
 
-        grad = approx_derivative(self.fun, x, **options)
-
-        return grad
+        return approx_derivative(self.fun, x, **options)
 
 
 class Gradient(Jacobian):

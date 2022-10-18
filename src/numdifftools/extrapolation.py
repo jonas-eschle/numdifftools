@@ -121,7 +121,7 @@ class Dea(object):
             e1abs = abs(e_1)
             tol2 = max(abs(e_2), e1abs) * _EPS
             tol3 = max(e1abs, abs(e_0)) * _EPS
-            all_converged = not (err2 > tol2 or err3 > tol3)
+            all_converged = err2 <= tol2 and err3 <= tol3
             if all_converged:
                 # if e_0, e_1 and e_2 are equal to within machine accuracy, convergence is assumed.
                 result = res
@@ -162,7 +162,7 @@ class Dea(object):
             if not error > abserr:
                 abserr = error
                 result = res
-            # 40 continue
+                # 40 continue
 
         # 50
         if not all_converged:
@@ -248,20 +248,14 @@ class EpsAlg(object):
         n = len(epstab)
         epstab.append(s_n)
         if n == 0:
-            estlim = s_n
-        else:
-            aux2 = 0.0
-            for i in range(n, 0, -1):
-                aux1 = aux2
-                aux2 = epstab[i - 1]
-                delta = epstab[i] - aux2
-                if np.abs(delta) <= 1.0e-60:
-                    epstab[i - 1] = 1.0e+60
-                else:
-                    epstab[i - 1] = aux1 + 1.0 / delta
-            estlim = epstab[n % 2]
-
-        return estlim
+            return s_n
+        aux2 = 0.0
+        for i in range(n, 0, -1):
+            aux1 = aux2
+            aux2 = epstab[i - 1]
+            delta = epstab[i] - aux2
+            epstab[i - 1] = 1.0e+60 if np.abs(delta) <= 1.0e-60 else aux1 + 1.0 / delta
+        return epstab[n % 2]
 
 
 def richardson_demo():

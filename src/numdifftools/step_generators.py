@@ -23,9 +23,7 @@ def make_exact(h):
 
 def get_nominal_step(x=None):
     """Return nominal step"""
-    if x is None:
-        return 1.0
-    return np.log(1.718281828459045 + np.abs(x)).clip(min=1)
+    return 1.0 if x is None else np.log(1.718281828459045 + np.abs(x)).clip(min=1)
 
 
 def get_base_step(scale):

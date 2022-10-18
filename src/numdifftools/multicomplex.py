@@ -81,8 +81,7 @@ class Bicomplex(object):
     def mod_c(self):
         """Complex modulus"""
         r11, r22 = self.z1 * self.z1, self.z2 * self.z2
-        r = np.sqrt(r11 + r22)
-        return r
+        return np.sqrt(r11 + r22)
 
     def norm(self):
         z1, z2 = self.z1, self.z2
@@ -116,9 +115,11 @@ class Bicomplex(object):
 
     @staticmethod
     def _coerce(other):
-        if not isinstance(other, Bicomplex):
-            return Bicomplex(other, np.zeros(np.shape(other)))
-        return other
+        return (
+            other
+            if isinstance(other, Bicomplex)
+            else Bicomplex(other, np.zeros(np.shape(other)))
+        )
 
     @staticmethod
     def mat2bicomp(arr):
@@ -361,11 +362,13 @@ class Bicomplex(object):
 
     @staticmethod
     def _arg_c(z1, z2):
-        sign = np.where((z1.real == 0) * (z2.real == 0), 0, np.where(0 <= z2.real, 1, -1))
+        sign = np.where(
+            (z1.real == 0) * (z2.real == 0), 0, np.where(z2.real >= 0, 1, -1)
+        )
+
         # clip to avoid nans for complex args
         arg = z2 / (z1 + _TINY).clip(min=-1e150, max=1e150)
-        arg_c = np.arctan(arg) + sign * np.pi * (z1.real <= 0)
-        return arg_c
+        return np.arctan(arg) + sign * np.pi * (z1.real <= 0)
 
     def arg_c1p(self):
         z1, z2 = 1 + self.z1, self.z2

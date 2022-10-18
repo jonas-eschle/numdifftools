@@ -11,6 +11,7 @@ Created on 7. des. 2018
 
 @author: pab
 """
+
 import os
 import re
 import shutil
@@ -20,14 +21,14 @@ import importlib
 
 ROOT = os.path.abspath(os.path.dirname(__file__))
 PACKAGE_NAME = 'numdifftools'
-INFO = importlib.import_module(PACKAGE_NAME+'.info', './src')
-LICENSE = importlib.import_module(PACKAGE_NAME+'.license', './src')
+INFO = importlib.import_module(f'{PACKAGE_NAME}.info', './src')
+LICENSE = importlib.import_module(f'{PACKAGE_NAME}.license', './src')
 
 
 def remove_previous_build():
     """Removes ./dist, ./build, ./docs/_build, and ./src/{}.egg-info directories.
     """.format(PACKAGE_NAME)
-    egginfo_path = os.path.join('src', '{}.egg-info'.format(PACKAGE_NAME))
+    egginfo_path = os.path.join('src', f'{PACKAGE_NAME}.egg-info')
     docs_folder = os.path.join('docs', '_build')
 
     for dirname in ['dist', 'build', egginfo_path, docs_folder]:
@@ -52,17 +53,21 @@ def update_readme():
 
 
 def set_package(version):
-    """Set version of {} package""".format(PACKAGE_NAME)
+    f"""Set version of {PACKAGE_NAME} package"""
 
     if version:
         filename = os.path.join(ROOT, "src", PACKAGE_NAME, "__init__.py")
-        print("Version: {}".format(version))
+        print(f"Version: {version}")
         with open(filename, "r") as fid:
             text = fid.read()
 
-        new_text = re.sub(r"__version__ = ['\"]([^'\"]*)['\"]",
-                          '__version__ = "{}"'.format(version),
-                          text, re.M)  # @UndefinedVariable
+        new_text = re.sub(
+            r"__version__ = ['\"]([^'\"]*)['\"]",
+            f'__version__ = "{version}"',
+            text,
+            re.M,
+        )
+
 
         with open(filename, "w") as fid:
             fid.write(new_text)
@@ -90,11 +95,11 @@ class ChangeDir:
 def call_subprocess(cmd_opts):
     """Safe call to subprocess"""
     print("\n\n***********************************************")
-    print("Running {}".format(' '.join(cmd_opts)))
+    print(f"Running {' '.join(cmd_opts)}")
     try:
         subprocess.call(cmd_opts)
     except Exception as error:  # subprocess.CalledProcessError:
-        print(str(error))
+        print(error)
     print("***********************************************\n")
 
 
