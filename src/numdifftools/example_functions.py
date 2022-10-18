@@ -195,9 +195,8 @@ def derivative_square(n):
 def derivative_log1p(n):
     def dlog1p(x):
         return (-1)**(n + 1) * special.gamma(n) / (1 + x)**n
-    if n > 5:
-        return None
-    return (log1p, dlog1p)[min(n, 1)]
+
+    return None if n > 5 else (log1p, dlog1p)[min(n, 1)]
 
 
 def _derivative_loga(n, a=10):
@@ -236,9 +235,8 @@ def derivative_sqrt(n):
     def dsqrt(x):
         sx = sqrt(x)
         return fact / sx**(2 * n - 1)
-    if n > 5:
-        return None
-    return (sqrt, dsqrt)[min(n, 1)]
+
+    return None if n > 5 else (sqrt, dsqrt)[min(n, 1)]
 
 
 def derivative_inv(n):

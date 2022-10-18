@@ -492,8 +492,7 @@ class Hessdiag(Hessian):
         y.data[1, :] = np.eye(n)
         z0 = self.fun(y, *args, **kwds)
         z = UTPM.as_utpm(z0)
-        H = z.data[2, ...] * 2
-        return H
+        return z.data[2, ...] * 2
 
     def _reverse(self, x, *args, **kwds):
         return np.diag(super(Hessdiag, self)._reverse(x, *args, **kwds))
@@ -591,8 +590,7 @@ class Taylor(object):
         x.data[1, 0, :] = 1
 
         y = self.fun(x)
-        coefs = np.squeeze(y.data)
-        return coefs
+        return np.squeeze(y.data)
 
 
 if __name__ == '__main__':

@@ -44,8 +44,7 @@ class TestRichardson(object):
         true_vals = {'central': central, 'forward': forward,
                      'backward': forward}
 
-        for method in true_vals:
-            truth = true_vals[method]
+        for method, truth in true_vals.items():
             for num_terms in [1, 2]:
                 for order in range(1, 7):
                     d = nd.Derivative(np.exp, method=method, order=order)
@@ -149,7 +148,7 @@ class TestDerivative(object):
         methods = ['complex', 'multicomplex', 'central', 'forward', 'backward']
         for method in methods:
             n_max = dict(multicomplex=2, central=6).get(method, 5)
-            for n in range(0, n_max + 1):
+            for n in range(n_max + 1):
                 true_val = true_vals[n]
                 for order in range(2, 9, 2):
                     d3cos = nd.Derivative(np.cos, n=n, order=order,
@@ -173,18 +172,18 @@ class TestDerivative(object):
     @example(8.9428143931508)
     @example(2.2204460492503134e-14)
     def test_derivative_of_cos_x(x):
-        note('x = {}'.format(x))
+        note(f'x = {x}')
         msg = 'order = {}, error = {}, err_est = {}'
         true_vals = (-np.sin(x), -np.cos(x), np.sin(x), np.cos(x)) * 2
         for method in ['complex', 'central', 'forward', 'backward']:
-            note('method = {}'.format(method))
+            note(f'method = {method}')
             n_max = dict(complex=7, central=6).get(method, 4)
             for n in range(1, n_max + 1):
                 true_val = true_vals[n - 1]
                 start, stop, step = dict(central=(2, 7, 2),
                                          complex=(2, 3, 1)).get(method,
                                                                 (1, 5, 1))
-                note('n = {}, true_val = {}'.format(n, true_val))
+                note(f'n = {n}, true_val = {true_val}')
                 for order in range(start, stop, step):
                     d3cos = nd.Derivative(np.cos, n=n, order=order,
                                           method=method, full_output=True)
@@ -520,7 +519,7 @@ class TestHessdiag(object):
 
         htrue = np.array([0., 2., 18.])
         method = 'complex'
-        for num_steps in range(3, 7, 1):
+        for num_steps in range(3, 7):
             steps = nd.MinStepGenerator(num_steps=num_steps,
                                         use_exact_steps=True,
                                         step_ratio=2.0, offset=4)
@@ -545,14 +544,13 @@ class TestHessdiag(object):
             steps = nd.MinStepGenerator(num_steps=order + 1,
                                         use_exact_steps=True,
                                         step_ratio=3., offset=0)
-            note('order = {}'.format(order))
+            note(f'order = {order}')
             for method in methods:
                 h_fun = nd.Hessdiag(self._fun, step=steps, method=method,
                                     order=order, full_output=True)
                 h_val, _info = h_fun(vals)
                 _error = np.abs(h_val - htrue)
-                note('error = {}, error_est = {}'.format(_error,
-                                                         _info.error_estimate))
+                note(f'error = {_error}, error_est = {_info.error_estimate}')
                 assert_allclose(h_val, htrue, rtol=1e-5, atol=100 * max(_info.error_estimate))
 
     def test_default_step(self):

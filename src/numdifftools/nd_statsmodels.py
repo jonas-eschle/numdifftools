@@ -169,11 +169,10 @@ class _Common(object):
     @method.setter
     def method(self, method):
         self._metod = method
-        callable_ = self._callables.get(method)
-        if callable_:
+        if callable_ := self._callables.get(method):
             self._derivative_nonzero_order = callable_
         else:
-            warnings.warn('{} is an illegal method! Setting method="central"'.format(method))
+            warnings.warn(f'{method} is an illegal method! Setting method="central"')
             self.method = 'central'
 
     def __call__(self, x, *args, **kwds):

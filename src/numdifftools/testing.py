@@ -29,7 +29,7 @@ def test_docstrings(name=''):
     import doctest
     if not name:
         name = inspect.stack()[1][1]
-    print('Testing docstrings in {}'.format(name))
+    print(f'Testing docstrings in {name}')
     doctest.testmod(optionflags=doctest.NORMALIZE_WHITESPACE |
                     doctest.ELLIPSIS)
 

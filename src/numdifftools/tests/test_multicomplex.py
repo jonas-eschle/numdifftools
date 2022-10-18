@@ -12,8 +12,7 @@ EPS = np.MachAr().eps
 
 
 def _default_base_step(x, scale):
-    h = (10 * EPS) ** (1. / scale) * np.maximum(np.log1p(np.abs(x)), 0.1)
-    return h
+    return (10 * EPS) ** (1. / scale) * np.maximum(np.log1p(np.abs(x)), 0.1)
 
 
 class TestBicomplex(object):

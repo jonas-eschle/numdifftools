@@ -119,8 +119,7 @@ def _compute_relative_errors(x, dfun, fd, scales):
 
     t = np.array(t)
     tt = dfun(x)
-    relativ_errors = np.abs(t - tt) / (np.maximum(np.abs(tt), 1)) + 1e-16
-    return relativ_errors
+    return np.abs(t - tt) / (np.maximum(np.abs(tt), 1)) + 1e-16
 
 
 def benchmark(x=0.0001, dfun=None, fd=None, name='', scales=None, show_plot=True):
@@ -154,14 +153,14 @@ def benchmark(x=0.0001, dfun=None, fd=None, name='', scales=None, show_plot=True
 
 def _print_summary(method, order, x_values, scales):
     print(scales)
-    header = 'method="{}", order={}, x_values={}:'.format(method, order, str(x_values))
+    header = f'method="{method}", order={order}, x_values={str(x_values)}:'
     print(header)
     for n in scales:
         print('n={}, mean scale={:.2f}, median scale={:.2f}'.format(n,
                                                                     np.mean(scales[n]),
                                                                     np.median(scales[n])))
 
-    print('Default scale with ' + header)
+    print(f'Default scale with {header}')
     for n in scales:
         print('n={}, scale={:.2f}'.format(n, default_scale(method, n, order)))
 

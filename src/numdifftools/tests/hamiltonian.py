@@ -58,8 +58,7 @@ class ClassicalHamiltonian(object):
     def initialposition(self):
         """Defines initial position as an estimate for the minimize process."""
         n = self.n
-        x_0 = r_[-(n - 1) / 2:(n - 1) / 2:n * 1j]
-        return x_0
+        return r_[-(n - 1) / 2:(n - 1) / 2:n * 1j]
 
     def normal_modes(self, eigenvalues):
         """Return normal modes
@@ -68,8 +67,7 @@ class ClassicalHamiltonian(object):
             (normal_modes)**2*m.
         """
         m = self.m
-        normal_modes = sqrt(eigenvalues / m)
-        return normal_modes
+        return sqrt(eigenvalues / m)
 
 
 def run_hamiltonian(hessian, verbose=True):

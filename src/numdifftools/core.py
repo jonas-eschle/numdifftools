@@ -265,31 +265,31 @@ class Derivative(_Limit):
         return list(step_gen()), step_gen.step_ratio
 
     def _raise_error_if_any_is_complex(self, x, f_x):
-        msg = ('The {} step derivative method does only work on a real valued analytic '
-               'function of a real variable!'.format(self.method))
-        _assert(not np.any(np.iscomplex(x)),
-                msg + ' But a complex variable was given!')
+        msg = f'The {self.method} step derivative method does only work on a real valued analytic function of a real variable!'
 
-        _assert(not np.any(np.iscomplex(f_x)),
-                msg + ' But the function given is complex valued!')
+        _assert(
+            not np.any(np.iscomplex(x)), f'{msg} But a complex variable was given!'
+        )
+
+
+        _assert(
+            not np.any(np.iscomplex(f_x)),
+            f'{msg} But the function given is complex valued!',
+        )
 
     def _eval_first(self, f, x):
         if self.method in ['complex', 'multicomplex']:
             f_x = f(x)
             self._raise_error_if_any_is_complex(x, f_x)
             return f_x
-        if self.fd_rule.eval_first_condition or self.full_output:
-            return f(x)
-        return 0.0
+        return f(x) if self.fd_rule.eval_first_condition or self.full_output else 0.0
 
     def __call__(self, x, *args, **kwds):
         x_i = np.asarray(x)
         with np.errstate(divide='ignore', invalid='ignore'):
             results, f_xi = self._derivative(x_i, args, kwds)
             derivative, info = self._extrapolate(*results)
-        if self.full_output:
-            return derivative, self.info(f_xi, *info)
-        return derivative
+        return (derivative, self.info(f_xi, *info)) if self.full_output else derivative
 
 
 def directionaldiff(f, x0, vec, **options):

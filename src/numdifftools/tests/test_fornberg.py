@@ -39,8 +39,10 @@ def test_high_order_derivative(x):
                 assert_allclose(np.real(vals[n]), tval, rtol=1e-6, atol=aerr)
             except AssertionError as error:
                 print(n, name, y, vals[n], tval, info.iterations, aerr0, aerr)
-                note("{}, {}, {}, {}, {}, {}, {}, {}".format(
-                    n, name, y, vals[n], tval, info.iterations, aerr0, aerr))
+                note(
+                    f"{n}, {name}, {y}, {vals[n]}, {tval}, {info.iterations}, {aerr0}, {aerr}"
+                )
+
                 raise error
 
 
@@ -142,13 +144,13 @@ class ExampleFunctions(object):
 
 
 def test_low_order_derivative_on_example_functions():
+    msg = '{0:3d}: {1:24.18f} + {2:24.18f}j ({3:g})'
     for j in range(15):
-        fun = getattr(ExampleFunctions, 'fun{}'.format(j))
+        fun = getattr(ExampleFunctions, f'fun{j}')
         der, info = derivative(fun, z0=0., r=0.06, n=10, max_iter=30,
                                full_output=True, step_ratio=1.6)
         print(info)
         print('answer:')
-        msg = '{0:3d}: {1:24.18f} + {2:24.18f}j ({3:g})'
         print(info.function_count)
         for i, der_i in enumerate(der):
             err = info.error_estimate[i]

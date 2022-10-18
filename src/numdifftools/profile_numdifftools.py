@@ -56,8 +56,8 @@ def main():
 def profile_main():
     import cProfile
     import pstats
-    cProfile.run("main()", "{}.profile".format(__file__))
-    s = pstats.Stats("{}.profile".format(__file__))
+    cProfile.run("main()", f"{__file__}.profile")
+    s = pstats.Stats(f"{__file__}.profile")
 
     s.sort_stats("time").print_stats(20)
 

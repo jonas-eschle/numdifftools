@@ -109,8 +109,9 @@ def timefun(fun):
         t1 = timer()
         result = fun(*args, **kwargs)
         t2 = timer()
-        print("@timefun:" + fun.__name__ + " took " + str(t2 - t1) + " seconds")
+        print(f"@timefun:{fun.__name__} took {str(t2 - t1)} seconds")
         return result
+
     return measure_time
 
 

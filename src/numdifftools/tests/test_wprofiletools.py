@@ -29,8 +29,7 @@ def _extract_do_profile_results(txt, header_start='Line #'):
         if line.startswith(header_start):
             results.append(line)
             continue
-        stats = _get_stats(line)
-        if stats:
+        if stats := _get_stats(line):
             results.append(stats)
 
     return results
@@ -47,8 +46,7 @@ def _extract_do_cprofile_results(txt):
 
 
 def _get_number():
-    for x in range(50000):
-        yield x
+    yield from range(50000)
 
 
 def _expensive_function():
@@ -67,8 +65,7 @@ class ExpensiveClass4(object):
         return i
 
     def _get_number4(self):
-        for x in range(self.n):
-            yield x
+        yield from range(self.n)
 
 
 FIRST_LINE = 'Line #      Hits         Time  Per Hit   % Time  Line Contents'
@@ -224,6 +221,9 @@ class TestDoProfile(object):
 
     def test_on_class_method_and_follow_class_method(self):
 
+
+
+
         class ExpensiveClass2(object):
             n = 5000
             """You can not put class method _get_number2 directly into follow
@@ -237,8 +237,8 @@ class TestDoProfile(object):
                 return i
 
             def _get_number2(self):
-                for x in range(self.n):
-                    yield x
+                yield from range(self.n)
+
 
         with capture_stdout_and_stderr() as out:
             ExpensiveClass2().expensive_method2()
@@ -256,6 +256,9 @@ class TestDoProfile(object):
 
     def test_on_all_class_methods(self):
 
+
+
+
         class ExpensiveClass3(object):
             n = 5000
             n2 = 50
@@ -269,12 +272,11 @@ class TestDoProfile(object):
                 return i
 
             def _get_number3(self):
-                for x in range(self.n):
-                    yield x
+                yield from range(self.n)
 
             def _get_number32(self):
-                for x in range(self.n2):
-                    yield x
+                yield from range(self.n2)
+
 
         with capture_stdout_and_stderr() as out:
             ExpensiveClass3().expensive_method3()
